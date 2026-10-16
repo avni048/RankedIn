@@ -1,0 +1,2727 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RankedIn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  :root{
+  --bg:#061014;
+  --surface:#0B1D22;
+  --surface-2:#102A30;
+
+  --ink:#E8F7F8;
+  --ink-soft:#8FAEB3;
+
+  --border:#1B4249;
+
+  --header-bg:#041116;
+  --header-ink:#EAFBFC;
+
+  --accent:#18B6D4;
+  --accent-dark:#0D849C;
+  --accent-ink:#FFFFFF;
+
+  --danger:#E05A61;
+  --warn:#D8A84E;
+
+  --track:#12343B;
+
+  --glow:rgba(24,182,212,.22);
+}
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Inter',-apple-system,'Segoe UI',sans-serif; font-size:14.5px; line-height:1.5;}
+  h1,h2,h3{font-family:'Source Serif 4', Georgia, serif; font-weight:600; margin:0;}
+  .container{max-width:1180px; margin:0 auto; padding:0 24px;}
+  header.top{background:var(--header-bg); color:var(--header-ink); padding:20px 0;}
+  header.top .brand{display:flex; align-items:baseline; gap:12px;}
+  header.top h1{font-size:26px; color:var(--header-ink);}
+  header.top .tagline{color:#A9ADA6; font-size:13px;}
+  nav.tabs{background:var(--header-bg); border-top:1px solid #2A2E33;}
+  nav.tabs .container{display:flex; gap:2px;}
+  nav.tabs button{background:none; border:none; color:#B7BAB4; padding:12px 16px; font:inherit; font-size:13.5px; cursor:pointer; border-bottom:2px solid transparent;}
+  nav.tabs button:hover{color:#fff;}
+  nav.tabs button.active{color:#fff; border-bottom-color:var(--accent);}
+  main{padding:28px 0 80px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .card{  background:linear-gradient(145deg,#0D252B,#08191D);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.30);}
+  .hero{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:30px;
+  padding:28px 30px;
+  margin-bottom:22px;
+  border:1px solid #1B4249;
+  border-radius:14px;
+  background:
+    radial-gradient(circle at 85% 20%,rgba(24,182,212,.16),transparent 35%),
+    linear-gradient(135deg,#0D252B,#07191D);
+  box-shadow:0 12px 35px rgba(0,0,0,.28);
+}
+
+.hero h2{
+  font-size:30px;
+  margin:7px 0;
+}
+
+.hero p{
+  color:var(--ink-soft);
+  max-width:700px;
+  margin:0;
+}
+
+.hero-badge{
+  color:#25BCD8;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1.5px;
+}
+
+.hero-stat{
+  min-width:170px;
+  padding:18px;
+  border-left:1px solid #1B4249;
+  text-align:center;
+}
+
+.hero-stat strong{
+  display:block;
+  font-size:34px;
+  color:#35C7DF;
+}
+
+.hero-stat span{
+  color:var(--ink-soft);
+  font-size:12px;
+}
+  .grid2{ display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  align-items:start;}
+  @media (max-width:860px){.grid2{grid-template-columns:1fr;}}
+  .step-title{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:5px;
+}
+
+.step-title > div span{
+  color:var(--ink-soft);
+  font-size:12px;
+}
+
+.step-number{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#123F48,#0B252B);
+  border:1px solid #216B78;
+  color:#2AC2DD;
+  font-weight:700;
+  font-size:12px;
+  box-shadow:0 0 18px rgba(24,182,212,.12);
+}
+  h2.section{font-size:19px; margin-bottom:4px;}
+  p.hint{color:var(--ink-soft); font-size:13px; margin:4px 0 16px;}
+  .dropzone{
+  border:1px dashed #21606A;
+  border-radius:10px;
+  padding:32px 20px;
+  text-align:center;
+  color:var(--ink-soft);
+  cursor:pointer;
+  transition:.2s;
+  background:rgba(7,25,29,.55);
+  position:relative;
+}
+
+.dropzone::before{
+  content:"↑";
+  display:block;
+  font-size:28px;
+  color:#22BBD7;
+  margin-bottom:7px;
+}
+
+.dropzone:hover,
+.dropzone.drag{
+  border-color:#24C3DF;
+  background:rgba(15,55,63,.55);
+  box-shadow:0 0 25px rgba(24,182,212,.10);
+  transform:translateY(-1px);
+}
+  .dropzone:hover, .dropzone.drag{border-color:var(--accent); color:var(--accent-dark);}
+  .dropzone input{display:none;}
+  button.btn{
+  font:inherit;
+  font-size:13.5px;
+  font-weight:600;
+  padding:10px 18px;
+  border-radius:8px;
+  border:1px solid #20B9D6;
+  background:linear-gradient(135deg,#159FBD,#086477);
+  color:#fff;
+  cursor:pointer;
+  box-shadow:0 5px 18px rgba(0,170,200,.20);
+}
+
+button.btn:hover{
+  background:linear-gradient(135deg,#20C5E2,#0A788D);
+  box-shadow:0 7px 22px rgba(0,190,220,.30);
+}
+
+button.btn.secondary{
+  background:#0B2025;
+  color:#4AC6DD;
+  border-color:#1C6470;
+}
+
+button.btn.secondary:hover{
+  background:#10343B;
+  border-color:#28B9D2;
+}
+  button.btn:hover{ background:linear-gradient(135deg,#20B4D3,#11758C);
+  box-shadow:0 5px 18px rgba(0,170,200,.32);}
+  button.btn.secondary{background:transparent; color:var(--accent); border-color:var(--accent);}
+  button.btn.secondary:hover{background:#102F36;}
+    button.btn:disabled{opacity:.45; cursor:not-allowed;}
+  button.btn.small{padding:6px 12px; font-size:12.5px;}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+  .chip{background:var(--track); border:1px solid var(--border); border-radius:14px; padding:4px 10px; font-size:12.5px; display:flex; align-items:center; gap:6px;}
+  .chip.required{border-color:#c9d9d3;}
+  .chip button{background:none; border:none; cursor:pointer; color:var(--ink-soft); font-size:13px; line-height:1; padding:0;}
+  .chip-input{display:flex; gap:6px; margin-top:8px;}
+  .chip-input input{flex:1; padding:7px 9px; border:1px solid var(--border); border-radius:6px; font:inherit;}
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  th{text-align:left; font-size:11.5px; text-transform:none; color:var(--ink-soft); font-weight:600; border-bottom:1px solid var(--border); padding:8px 10px;}
+  td{padding:10px; border-bottom:1px solid var(--border); vertical-align:middle;}
+  th.num, td.num{text-align:right; font-variant-numeric:tabular-nums;}
+  tr.rowlink{cursor:pointer;}
+tr.rowlink:hover{background:#123139;}
+  .bar-wrap{width:90px; height:6px; background:var(--track); border-radius:3px; overflow:hidden; display:inline-block; margin-left:8px; vertical-align:middle;}
+  .bar-fill{height:100%; background:var(--accent);}
+  .status-ok{color:var(--accent-dark);} .status-warn{color:var(--warn);} .status-fail{color:var(--danger);}
+  .score-badge{font-family:'Source Serif 4',serif; font-weight:700; font-size:20px;}
+  .muted{color:var(--ink-soft);}
+  .evidence{background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:10px 12px; font-size:13px; margin:6px 0;}
+  .evidence .label{font-size:11px; color:var(--ink-soft); margin-bottom:3px;}
+  .flag{border-left:3px solid var(--warn); background:#18251F; padding:8px 12px; margin-bottom:8px; font-size:13px; border-radius:2px;}
+  .empty{text-align:center; padding:50px 20px; color:var(--ink-soft);}
+  .weights-row{display:grid; grid-template-columns:180px 1fr 50px; gap:10px; align-items:center; margin-bottom:10px;}
+  .weights-row input[type=range]{width:100%;}
+  .chat-log{height:340px; overflow-y:auto; border:1px solid var(--border); border-radius:6px; padding:14px; background:var(--bg); margin-bottom:10px;}
+  .chat-msg{margin-bottom:12px; max-width:80%;}
+  .chat-msg.user{margin-left:auto; text-align:right;}
+  .chat-msg .bubble{display:inline-block; padding:9px 13px; border-radius:10px; font-size:13.5px; text-align:left;}
+  .chat-msg.user .bubble{background:var(--accent); color:#fff;}
+  .chat-msg.bot .bubble{background:var(--surface); border:1px solid var(--border); white-space:pre-wrap;}
+  .chat-input{display:flex; gap:8px;}
+  .chat-input input{flex:1; padding:10px 12px; border:1px solid var(--border); border-radius:6px; font:inherit;}
+  .pill{display:inline-block; padding:2px 8px; border-radius:10px; font-size:11.5px; font-weight:600;}
+  .pill.ok{background:#123A35; color:#63D6C1;}
+  .pill.warn{background:#3A301A; color:#E2B85C;}
+.pill.fail{background:#3A1D22; color:#F0787F;}
+  select, input[type=text]{font:inherit;}
+  .privacy-note{font-size:12px; color:var(--ink-soft); margin-top:10px; border-top:1px solid var(--border); padding-top:10px;}
+  .checkbox-row{display:flex; align-items:center; gap:8px; padding:6px 0;}
+  .compare-table td, .compare-table th{text-align:center;}
+  .compare-table td:first-child, .compare-table th:first-child{text-align:left;}
+  a.linklike{color:var(--accent-dark); cursor:pointer; text-decoration:underline;}
+  .progress-list{font-size:13px;}
+  .progress-list div{padding:4px 0; border-bottom:1px solid var(--border);}
+  ::selection{background:#cfe3db;}
+  @media print{
+    nav.tabs, header.top, .no-print{display:none !important;}
+    .panel{display:block !important;}
+    body{background:#fff;}
+
+  }
+  /* =========================
+   WORKFLOW SECTION
+   ========================= */
+
+.workflow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.workflow-step {
+    flex: 1;
+    text-align: center;
+    padding: 25px;
+    border: 1px solid #00bcd4;
+    border-radius: 16px;
+    background: rgba(0, 188, 212, 0.06);
+}
+
+.workflow-step .number {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.workflow-step h3 {
+    margin: 8px 0;
+}
+
+.workflow-step p {
+    margin: 0;
+    opacity: 0.8;
+}
+
+.workflow-arrow {
+    font-size: 30px;
+    opacity: 0.7;
+}
+/* =========================================================
+   AUTHENTICATION SCREEN
+   ========================================================= */
+
+#auth-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(24,182,212,.14), transparent 35%),
+    radial-gradient(circle at 85% 80%, rgba(24,182,212,.10), transparent 35%),
+    #061014;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.auth-container {
+  width: min(950px, 100%);
+  min-height: 590px;
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  background: linear-gradient(145deg, #0B1D22, #07171B);
+  border: 1px solid #1B4249;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow:
+    0 25px 70px rgba(0,0,0,.55),
+    0 0 50px rgba(24,182,212,.07);
+}
+
+/* ---------- LEFT BRAND AREA ---------- */
+
+.auth-brand {
+  padding: 55px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid #1B4249;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(24,182,212,.12), transparent 40%),
+    linear-gradient(145deg, #0C252B, #08181C);
+}
+
+.auth-logo {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #E8F7F8;
+  margin-bottom: 12px;
+}
+
+.auth-tagline {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 25px;
+  line-height: 1.25;
+  color: #35C7DF;
+  margin-bottom: 22px;
+}
+
+.auth-description {
+  color: #8FAEB3;
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 390px;
+}
+
+.auth-features {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  color: #B8D4D8;
+  font-size: 13px;
+}
+
+.auth-features div {
+  padding: 10px 12px;
+  border: 1px solid #163B42;
+  border-radius: 8px;
+  background: rgba(7,25,29,.55);
+}
+
+/* ---------- RIGHT FORM AREA ---------- */
+
+.auth-box {
+  padding: 42px 45px;
+  display: flex;
+  align-items: center;
+  background: #08191D;
+}
+
+.auth-form {
+  width: 100%;
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
+  animation: authFade .25s ease;
+}
+
+@keyframes authFade {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-heading {
+  margin-bottom: 25px;
+}
+
+.auth-heading h2 {
+  font-size: 27px;
+  margin-bottom: 5px;
+  color: #E8F7F8;
+}
+
+.auth-heading p {
+  color: #8FAEB3;
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.auth-form > label {
+  display: block;
+  color: #BFD5D8;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 15px 0 6px;
+}
+
+.auth-form input[type="email"],
+.auth-form input[type="text"],
+.auth-form input[type="password"] {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #1B4249;
+  border-radius: 7px;
+  background: #061317;
+  color: #E8F7F8;
+  outline: none;
+  font: inherit;
+  font-size: 13.5px;
+  transition: .2s;
+}
+
+.auth-form input::placeholder {
+  color: #607F84;
+}
+
+.auth-form input:focus {
+  border-color: #20B9D6;
+  box-shadow: 0 0 0 3px rgba(24,182,212,.08);
+}
+
+/* ---------- PASSWORD ---------- */
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 60px !important;
+}
+
+.password-wrapper button {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  color: #35C7DF;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- OPTIONS ---------- */
+
+.auth-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 13px 0 20px;
+  font-size: 11.5px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #8FAEB3;
+}
+
+.remember input,
+.terms input {
+  accent-color: #18B6D4;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.auth-submit {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #20B9D6;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #159FBD, #086477);
+  color: white;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0,170,200,.18);
+  transition: .2s;
+}
+
+.auth-submit:hover {
+  background: linear-gradient(135deg, #20C5E2, #0A788D);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0,190,220,.28);
+}
+
+.text-button {
+  border: none;
+  background: none;
+  color: #35C7DF;
+  padding: 0;
+  font: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.text-button:hover {
+  text-decoration: underline;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 23px 0 17px;
+  color: #55767B;
+  font-size: 10px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #1B4249;
+}
+
+.switch-text {
+  text-align: center;
+  color: #8FAEB3;
+  font-size: 12px;
+  margin: 0;
+}
+
+/* ---------- SIGNUP ---------- */
+
+.terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 16px 0 18px;
+  color: #8FAEB3;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.terms input {
+  margin-top: 2px;
+}
+
+/* ---------- FORGOT PASSWORD ---------- */
+
+.forgot-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #102F36;
+  border: 1px solid #21606A;
+  font-size: 23px;
+  margin-bottom: 18px;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 760px) {
+
+  #auth-screen {
+    padding: 15px;
+  }
+
+  .auth-container {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .auth-brand {
+    display: none;
+  }
+
+  .auth-box {
+    padding: 35px 25px;
+  }
+
+}
+/* =========================================================
+   CANDIDATE DETAIL / EXPLAINABLE RANKING
+   ========================================================= */
+
+.candidate-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  padding-bottom:22px;
+  margin-bottom:22px;
+  border-bottom:1px solid var(--border);
+}
+
+.candidate-rank{
+  color:var(--accent);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  margin-bottom:5px;
+}
+
+.candidate-score{
+  min-width:130px;
+  text-align:center;
+  padding:12px 20px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface);
+}
+
+.candidate-score span{
+  display:block;
+  font-family:'Source Serif 4',serif;
+  font-size:34px;
+  font-weight:700;
+  color:var(--accent);
+}
+
+.candidate-score small{
+  color:var(--ink-soft);
+  font-size:11px;
+}
+
+
+.rank-explanation{
+  border:1px solid var(--border);
+  border-left:4px solid var(--accent);
+  border-radius:10px;
+  padding:18px 20px;
+  margin-bottom:24px;
+  background:linear-gradient(
+    135deg,
+    rgba(24,182,212,.10),
+    rgba(11,29,34,.8)
+  );
+}
+
+.rank-explanation-title{
+  font-size:17px;
+  font-weight:700;
+  margin-bottom:8px;
+  color:var(--ink);
+}
+
+.rank-explanation p{
+  color:var(--ink-soft);
+  margin:7px 0;
+}
+
+.rank-explanation b{
+  color:var(--ink);
+}
+
+
+.detail-section{
+  margin-top:26px;
+}
+
+.detail-heading{
+  font-family:'Source Serif 4',serif;
+  font-size:17px;
+  margin-bottom:5px;
+}
+
+
+.score-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:14px;
+}
+
+.score-factor{
+  padding:15px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--surface);
+}
+
+.factor-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:9px;
+}
+
+.factor-top b{
+  color:var(--accent);
+}
+
+.factor-bar{
+  height:7px;
+  background:var(--track);
+  border-radius:5px;
+  overflow:hidden;
+  margin-bottom:7px;
+}
+
+.factor-bar div{
+  height:100%;
+  background:var(--accent);
+  border-radius:5px;
+}
+
+.score-factor small{
+  color:var(--ink-soft);
+  font-size:11px;
+}
+
+
+.explanation-box{
+  padding:15px 18px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--surface);
+  color:var(--ink-soft);
+  line-height:1.7;
+}
+
+
+@media(max-width:700px){
+
+  .candidate-header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .candidate-score{
+    width:100%;
+  }
+
+  .score-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+.required-column,
+.semantic-column {
+  text-align: center !important;
+}
+#rankings-table-wrap table th:nth-child(4),
+#rankings-table-wrap table td:nth-child(4),
+#rankings-table-wrap table th:nth-child(5),
+#rankings-table-wrap table td:nth-child(5) {
+    text-align: center !important;
+}
+.resume-analysis {
+  margin-top: 35px;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.resume-analysis h3 {
+  margin-bottom: 5px;
+}
+
+.analysis-row {
+  margin-top: 22px;
+}
+
+.analysis-name {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 7px;
+  font-size: 14px;
+}
+
+.analysis-name strong {
+  font-size: 15px;
+}
+
+.analysis-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.analysis-bar {
+  height: 100%;
+  border-radius: 10px;
+  background: #35c7e8;
+  transition: width 0.5s ease;
+}
+
+.analysis-info {
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.65;
+}
+/* =========================================================
+   CIRCULAR RESUME ANALYSIS
+   ========================================================= */
+
+.resume-analysis {
+  margin-top: 35px;
+  padding: 28px;
+  border-radius: 18px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.resume-analysis h3 {
+  margin-bottom: 6px;
+}
+
+.circular-analysis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px;
+  margin-top: 28px;
+}
+
+.candidate-circle {
+  text-align: center;
+  padding: 22px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(0,0,0,0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.candidate-circle:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.circle-chart {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 15px;
+  position: relative;
+}
+
+.circle-chart svg {
+  width: 150px;
+  height: 150px;
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: rgba(128,128,128,0.18);
+  stroke-width: 11;
+}
+
+.circle-progress {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 11;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease;
+}
+
+.circle-score {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-score strong {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.circle-score span {
+  font-size: 12px;
+  opacity: 0.65;
+  margin-top: 5px;
+}
+
+.candidate-circle-name {
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.circle-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  text-align: left;
+}
+
+.circle-details div {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(128,128,128,0.08);
+}
+
+.circle-details span {
+  display: block;
+  font-size: 11px;
+  opacity: 0.65;
+}
+
+.circle-details b {
+  font-size: 14px;
+}
+/* =========================================================
+   SINGLE CIRCULAR RESUME ANALYSIS
+   ========================================================= */
+
+.resume-analysis {
+  margin-top: 35px;
+  padding: 30px;
+  border-radius: 20px;
+
+  background: linear-gradient(
+    145deg,
+    #111827,
+    #0f172a
+  );
+
+  border: 1px solid rgba(255,255,255,0.12);
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,0.35);
+}
+
+.resume-analysis h3 {
+  margin-bottom: 6px;
+  color: white;
+}
+
+.resume-analysis .hint {
+  color: #9ca3af;
+}
+
+.radar-wrapper {
+  position: relative;
+
+  width: 100%;
+  height: 600px;
+
+  margin-top: 25px;
+
+  padding: 15px;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- ================= AUTHENTICATION ================= -->
+
+<div id="auth-screen">
+
+  <div class="auth-container">
+
+    <!-- LEFT SIDE -->
+    <div class="auth-brand">
+      <div class="auth-logo">RankedIn</div>
+
+      <div class="auth-tagline">
+        Smart candidate ranking.<br>
+        Better hiring decisions.
+      </div>
+
+      <div class="auth-description">
+        Analyze resumes, compare candidates and build transparent
+        shortlists — all from one intelligent workspace.
+      </div>
+
+      <div class="auth-features">
+        <div>✓ AI-powered candidate ranking</div>
+        <div>✓ Transparent scoring</div>
+        <div>✓ Resume analysis</div>
+        <div>✓ Privacy-first processing</div>
+      </div>
+    </div>
+
+
+    <!-- RIGHT SIDE -->
+    <div class="auth-box">
+
+      <!-- LOGIN -->
+      <div class="auth-form active" id="login-form">
+
+        <div class="auth-heading">
+          <h2>Welcome back</h2>
+          <p>Sign in to your RankedIn workspace.</p>
+        </div>
+
+        <label>Email address</label>
+        <input
+          type="email"
+          id="login-email"
+          placeholder="you@example.com"
+        >
+
+        <label>Password</label>
+
+        <div class="password-wrapper">
+          <input
+            type="password"
+            id="login-password"
+            placeholder="Enter your password"
+          >
+          <button type="button" onclick="togglePassword('login-password', this)">
+            Show
+          </button>
+        </div>
+
+        <div class="auth-options">
+          <label class="remember">
+            <input type="checkbox">
+            Remember me
+          </label>
+
+          <button
+            type="button"
+            class="text-button"
+            onclick="showAuthForm('forgot-form')"
+          >
+            Forgot password?
+          </button>
+        </div>
+
+        <button class="auth-submit" onclick="frontendLogin()">
+          Sign in
+        </button>
+
+        <div class="auth-divider">
+          <span>OR</span>
+        </div>
+
+        <p class="switch-text">
+          Don't have an account?
+          <button
+            type="button"
+            class="text-button"
+            onclick="showAuthForm('signup-form')"
+          >
+            Create one
+          </button>
+        </p>
+
+      </div>
+
+
+      <!-- SIGN UP -->
+      <div class="auth-form" id="signup-form">
+
+        <div class="auth-heading">
+          <h2>Create account</h2>
+          <p>Start using your RankedIn workspace.</p>
+        </div>
+
+        <label>Full name</label>
+        <input
+          type="text"
+          id="signup-name"
+          placeholder="Your full name"
+        >
+
+        <label>Email address</label>
+        <input
+          type="email"
+          id="signup-email"
+          placeholder="you@example.com"
+        >
+
+        <label>Password</label>
+
+        <div class="password-wrapper">
+          <input
+            type="password"
+            id="signup-password"
+            placeholder="Create a password"
+          >
+          <button type="button" onclick="togglePassword('signup-password', this)">
+            Show
+          </button>
+        </div>
+
+        <label>Confirm password</label>
+
+        <div class="password-wrapper">
+          <input
+            type="password"
+            id="signup-confirm"
+            placeholder="Confirm your password"
+          >
+          <button type="button" onclick="togglePassword('signup-confirm', this)">
+            Show
+          </button>
+        </div>
+
+        <label class="terms">
+          <input type="checkbox" id="signup-terms">
+          <span>
+            I agree to the terms and privacy policy.
+          </span>
+        </label>
+
+        <button class="auth-submit" onclick="frontendSignup()">
+          Create account
+        </button>
+
+        <p class="switch-text">
+          Already have an account?
+          <button
+            type="button"
+            class="text-button"
+            onclick="showAuthForm('login-form')"
+          >
+            Sign in
+          </button>
+        </p>
+
+      </div>
+
+
+      <!-- FORGOT PASSWORD -->
+      <div class="auth-form" id="forgot-form">
+
+        <div class="forgot-icon">
+          🔑
+        </div>
+
+        <div class="auth-heading">
+          <h2>Forgot password?</h2>
+          <p>
+            Enter your email and we'll send instructions
+            to reset your password.
+          </p>
+        </div>
+
+        <label>Email address</label>
+
+        <input
+          type="email"
+          id="forgot-email"
+          placeholder="you@example.com"
+        >
+
+        <button class="auth-submit" onclick="frontendForgotPassword()">
+          Send reset link
+        </button>
+
+        <p class="switch-text">
+          Remember your password?
+          <button
+            type="button"
+            class="text-button"
+            onclick="showAuthForm('login-form')"
+          >
+            Back to sign in
+          </button>
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ================= END AUTHENTICATION ================= -->
+ 
+<header class="top">
+  <div class="container brand">
+    <h1>RankedIn</h1>
+    <span class="tagline">Get Ranked. Get Hired.</span>
+  </div>
+</header>
+ 
+<nav class="tabs">
+  <div class="container">
+    <button data-tab="upload" class="active">Upload &amp; analyze</button>
+    <button data-tab="rankings">Rankings</button>
+    <button data-tab="detail">Candidate detail</button>
+    <button data-tab="compare">Compare</button>
+    <button data-tab="chat">Ask a question</button>
+    <button data-tab="methodology">Methodology</button>
+  </div>
+</nav>
+ 
+<main class="container">
+ 
+  <!-- ============ UPLOAD PANEL ============ -->
+  <section class="panel active" id="panel-upload">
+    <div class="hero">
+  <div>
+    <div class="hero-badge">AI-POWERED RECRUITING WORKSPACE</div>
+    <h2>Find the right candidate, faster.</h2>
+    <p>Upload a job description and resumes. RankedIn analyzes skills, experience and semantic relevance to build a transparent shortlist.</p>
+  </div>
+  <div class="hero-stat">
+    <strong>01</strong>
+    <span>Upload → Analyze → Rank</span>
+  </div>
+</div>
+    <div class="grid2">
+      <div class="card">
+       <div class="step-title">
+  <span class="step-number">01</span>
+  <div>
+    <h2 class="section">Job description</h2>
+    <span>Define what you're looking for</span>
+  </div>
+</div>
+        <p class="hint">Upload a JD as PDF/text, or paste it below.</p>
+        <div class="dropzone" id="jd-drop">
+          <div id="jd-drop-label">Drop a JD file here, or click to choose</div>
+          <input type="file" id="jd-file" accept=".pdf,.txt">
+        </div>
+        <p class="hint" style="margin-top:14px;">— or paste JD text —</p>
+      <textarea id="jd-paste" rows="6" style="width:100%; padding:10px; border:1px solid var(--border); border-radius:6px; font:inherit; background:#08191D; color:var(--ink);"></textarea>
+        <div style="margin-top:12px; display:flex; gap:10px;">
+          <button class="btn secondary" id="jd-parse-btn">Parse job description</button>
+          <button class="btn secondary" id="load-demo-btn">Load sample data</button>
+        </div>
+ 
+        <div id="jd-review" style="display:none; margin-top:18px; border-top:1px solid var(--border); padding-top:16px;">
+          <div style="font-weight:600; margin-bottom:4px;">Detected title</div>
+          <input type="text" id="jd-title" style="width:100%; padding:7px 9px; border:1px solid var(--border); border-radius:6px; margin-bottom:14px;">
+ 
+          <div style="font-weight:600;">Required skills <span class="muted" style="font-weight:400;">(edit before analyzing)</span></div>
+          <div class="chips" id="required-chips"></div>
+          <div class="chip-input"><input type="text" id="required-add" placeholder="Add a required skill and press Enter"></div>
+ 
+          <div style="font-weight:600; margin-top:14px;">Preferred skills</div>
+          <div class="chips" id="preferred-chips"></div>
+          <div class="chip-input"><input type="text" id="preferred-add" placeholder="Add a preferred skill and press Enter"></div>
+        </div>
+      </div>
+ 
+      <div class="card">
+       <div class="step-title">
+  <span class="step-number">02</span>
+  <div>
+    <h2 class="section">Resumes</h2>
+    <span>Upload your candidate pool</span>
+  </div>
+</div>
+        <p class="hint">Upload 1–20 resumes (PDF or .txt). Each is processed independently — one bad file won't stop the batch.</p>
+        <div class="dropzone" id="resume-drop">
+          <div id="resume-drop-label">Drop resume files here, or click to choose</div>
+          <input type="file" id="resume-files" accept=".pdf,.txt" multiple>
+        </div>
+        <div class="progress-list" id="resume-progress" style="margin-top:14px;"></div>
+      </div>
+    </div>
+ 
+    <div class="card">
+      <div class="step-title">
+  <span class="step-number">03</span>
+  <div>
+    <h2 class="section">Run analysis</h2>
+    <span>Rank candidates automatically</span>
+  </div>
+</div>
+      <p class="hint">Scores every parsed resume against the reviewed JD using keyword + semantic matching, then ranks the batch.</p>
+      <button class="btn" id="analyze-btn" disabled>Analyze candidates</button>
+      <span id="analyze-status" class="muted" style="margin-left:12px;"></span>
+    </div>
+        </div>
+
+    <div class="workflow">
+      <div class="workflow-item">
+        <strong>01</strong>
+        <div>
+          <b>Upload</b>
+          <span>JD + resumes</span>
+        </div>
+      </div>
+
+      <div class="workflow-line"></div>
+
+      <div class="workflow-item">
+        <strong>02</strong>
+        <div>
+          <b>Analyze</b>
+          <span>Skills + context</span>
+        </div>
+      </div>
+
+      <div class="workflow-line"></div>
+
+      <div class="workflow-item">
+        <strong>03</strong>
+        <div>
+          <b>Rank</b>
+          <span>Transparent scores</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="privacy-note container"
+ 
+    <div class="privacy-note container" style="padding:0;">
+      Privacy: all parsing, matching, and scoring happens locally in your browser. No resume or job description content is uploaded to any server.
+    </div>
+  </section>
+ 
+  <!-- ============ RANKINGS PANEL ============ -->
+  <section class="panel" id="panel-rankings">
+    <div class="card" id="rankings-summary"></div>
+    <div class="card" id="rankings-table-wrap">
+      <div class="empty">Run an analysis to see rankings.</div>
+    </div>
+  </section>
+ 
+  <!-- ============ DETAIL PANEL ============ -->
+  <section class="panel" id="panel-detail">
+    <div class="card" id="detail-content"><div class="empty">Select a candidate from the rankings table.</div></div>
+  </section>
+ 
+  <!-- ============ COMPARE PANEL ============ -->
+  <section class="panel" id="panel-compare">
+    <div class="card">
+      <h2 class="section">Compare candidates</h2>
+      <p class="hint">Pick two or more candidates.</p>
+      <div id="compare-picker"></div>
+      <button class="btn secondary small" id="compare-run-btn" style="margin-top:10px;">Compare selected</button>
+    </div>
+    <div class="card" id="compare-result"></div>
+  </section>
+ 
+  <!-- ============ CHAT PANEL ============ -->
+  <section class="panel" id="panel-chat">
+    <div class="card">
+      <h2 class="section">Ask about this batch</h2>
+      <p class="hint">Rule-based Q&amp;A over the structured ranking data — no external AI call, so every answer traces to an actual score or field. Try: "who has react", "why is candidate 1 above candidate 3", "what skills are most commonly missing", "why didn't X make top 3".</p>
+      <div class="chat-log" id="chat-log"></div>
+      <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="Type a question...">
+        <button class="btn small" id="chat-send">Ask</button>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ============ METHODOLOGY PANEL ============ -->
+  <section class="panel" id="panel-methodology">
+    <div class="card">
+      <h2 class="section">Scoring weights</h2>
+      <p class="hint">Adjust and re-run analysis to see how the ranking responds. Weights always renormalize to sum to 1.</p>
+      <div id="weights-controls"></div>
+      <button class="btn secondary small" id="weights-reset">Reset to defaults</button>
+    </div>
+    <div class="card">
+      <h2 class="section">How matching works</h2>
+      <p><b>Keyword matching:</b> resume and JD text are scanned against a curated skill dictionary with an alias table (e.g. "JS" → "JavaScript", "Postgres" → "PostgreSQL"). Required-skill coverage and preferred-skill coverage are each computed as matched ÷ total.</p>
+      <p><b>Semantic matching:</b> the JD's requirement/responsibility sentences and the resume's sentences are vectorized with TF-IDF and compared with cosine similarity, taking the best-matching resume sentence per JD requirement, then averaging. This is why "built backend services with Express and MongoDB" scores well against "develop REST APIs using Node.js and MongoDB" even without an exact word match — they share enough context vocabulary. A small, capped bonus is also added when a required skill is missing literally but a curated ontology shows a directly related technology is present (e.g. Express relates to Node.js) — this bonus and the reasoning behind it is always shown in candidate evidence, never hidden.</p>
+      <p><b>Experience &amp; project relevance:</b> the Experience and Projects sections of the resume are checked separately for required-skill (or related-skill) mentions, so skills only listed in a generic skills list score differently from skills demonstrated in actual work.</p>
+      <p><b>Final score</b> = weighted sum of the five components above, each normalized to 0–100.</p>
+      <p><b>Tie-breaking:</b> sort by final score, then by required-skill score, then alphabetically by candidate name — fully deterministic.</p>
+    </div>
+    <div class="card">
+      <h2 class="section">JD quality check (bonus)</h2>
+      <div id="bias-report"><span class="muted">Parse a JD to see this.</span></div>
+    </div>
+  </section>
+ 
+</main>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
+<script>
+if (window.pdfjsLib) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+ 
+/* =========================================================================
+   CORE MATCHING / SCORING LOGIC (pure functions, unit-tested outside the app)
+   ========================================================================= */
+const ALIASES = {
+  "js":"javascript","es6":"javascript","ecmascript":"javascript",
+  "reactjs":"react","react.js":"react",
+  "node":"node.js","nodejs":"node.js",
+  "expressjs":"express","express.js":"express",
+  "postgres":"postgresql","postgressql":"postgresql",
+  "mongo":"mongodb","mongo db":"mongodb",
+  "py":"python","ts":"typescript",
+  "html5":"html","css3":"css",
+  "restful":"rest api","rest apis":"rest api","restful api":"rest api","restful apis":"rest api","api development":"rest api",
+  "amazon web services":"aws","aws cloud":"aws",
+  "nextjs":"next.js","next js":"next.js",
+  "vuejs":"vue","vue.js":"vue",
+  "tailwindcss":"tailwind","tailwind css":"tailwind",
+  "c sharp":"c#","csharp":"c#",
+  "dot net":".net","asp.net":".net","dotnet":".net",
+  "oops":"oop","object oriented programming":"oop","object-oriented programming":"oop",
+  "ml":"machine learning","k8s":"kubernetes",
+  "ci cd":"ci/cd","cicd":"ci/cd","continuous integration":"ci/cd",
+  "sql server":"sql",
+  "github":"git","gitlab":"git","version control":"git",
+  "springboot":"spring boot","spring-boot":"spring boot",
+};
+const KNOWN_SKILLS = new Set([
+  "javascript","typescript","python","java","c++","c","c#","php","ruby","go","sql","html","css",
+  "react","angular","vue","redux","next.js","tailwind","bootstrap","jquery",
+  "node.js","express","django","flask","spring","spring boot",".net","laravel","fastapi",
+  "mongodb","mysql","postgresql","sqlite","redis","firebase","oracle","nosql",
+  "git","docker","kubernetes","aws","azure","gcp","jenkins","ci/cd","linux","jira",
+  "rest api","graphql","microservices","oop","mvc","agile","scrum","unit testing","tdd",
+  "jest","mocha","selenium","junit","pytest",
+  "machine learning","data structures","algorithms"
+]);
+const RELATED = {
+  "express":["node.js","rest api","javascript"], "node.js":["express","javascript","rest api"],
+  "django":["python","rest api"], "flask":["python","rest api"], "fastapi":["python","rest api"],
+  "react":["javascript","redux","next.js"], "vue":["javascript","next.js"], "angular":["typescript","javascript"],
+  "mongodb":["nosql"], "postgresql":["sql"], "mysql":["sql"], "sqlite":["sql"],
+  "docker":["kubernetes","ci/cd"], "kubernetes":["docker","ci/cd"],
+  "aws":["azure","gcp","ci/cd"], "spring boot":["java","spring","rest api"], "spring":["java","spring boot"],
+  ".net":["c#"],
+};
+const VAGUE_PHRASES = ["good communication skills","team player","fast learner","self motivated","self-motivated","hard working","hard-working","go getter","go-getter"];
+const BIASED_WORDS = ["ninja","rockstar","guru","superstar","young and energetic","native english speaker","digital native"];
+ 
+function canon(term){ const t=term.trim().toLowerCase(); return ALIASES[t]||t; }
+function normalizeText(s){ return (s||"").toLowerCase(); }
+function tokenize(s){ return normalizeText(s).replace(/[^a-z0-9+#.\s]/g,' ').split(/\s+/).filter(Boolean); }
+function splitSentences(text){
+  return (text||"").split(/(?<=[.!?\n•])\s+/).map(s=>s.trim()).filter(s=>s.length>3);
+}
+function extractSkillsFromText(text){
+  const norm = normalizeText(text);
+  const found = new Set();
+  const allTerms = new Set([...KNOWN_SKILLS, ...Object.keys(ALIASES)]);
+  const sorted = [...allTerms].sort((a,b)=>b.length-a.length);
+  for(const term of sorted){
+    const pattern = term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const re = new RegExp(`(^|[^a-z0-9+#.])${pattern}([^a-z0-9+#.]|$)`,'i');
+    if(re.test(norm)) found.add(canon(term));
+  }
+  return [...found];
+}
+function buildTfidf(docs){
+  const docTokens = docs.map(tokenize);
+  const df = new Map();
+  docTokens.forEach(tokens=>{ new Set(tokens).forEach(t=>df.set(t,(df.get(t)||0)+1)); });
+  const N = docs.length;
+  const idf = new Map();
+  df.forEach((count,term)=>idf.set(term, Math.log((N+1)/(count+1))+1));
+  function vectorize(tokens){
+    const tf = new Map();
+    tokens.forEach(t=>tf.set(t,(tf.get(t)||0)+1));
+    const vec = new Map();
+    tf.forEach((count,term)=>{
+      const idfVal = idf.get(term) ?? (Math.log((N+1)/1)+1);
+      vec.set(term, (count/Math.max(tokens.length,1))*idfVal);
+    });
+    return vec;
+  }
+  function cosine(vecA,vecB){
+    let dot=0,normA=0,normB=0;
+    vecA.forEach((v,k)=>{ normA+=v*v; if(vecB.has(k)) dot+=v*vecB.get(k); });
+    vecB.forEach(v=>{ normB+=v*v; });
+    if(normA===0||normB===0) return 0;
+    return dot/(Math.sqrt(normA)*Math.sqrt(normB));
+  }
+  return {vectorize, cosine};
+}
+function semanticMatch(jdSentences, resumeSentences, requiredCanon, resumeSkillsCanon){
+  const allDocs = [...jdSentences, ...resumeSentences];
+  if(allDocs.length===0) return {score:0, perRequirementBest:[], relatedHits:[], baseSemantic:0, boost:0};
+  const {vectorize, cosine} = buildTfidf(allDocs);
+  const resumeVecs = resumeSentences.map(s=>({text:s, vec:vectorize(tokenize(s))}));
+  let total=0,count=0; const perRequirementBest=[];
+  jdSentences.forEach(jdS=>{
+    const jdVec = vectorize(tokenize(jdS));
+    let best=0, bestText=null;
+    resumeVecs.forEach(r=>{ const sim=cosine(jdVec,r.vec); if(sim>best){best=sim; bestText=r.text;} });
+    total+=best; count++;
+    perRequirementBest.push({requirement:jdS, similarity:best, evidence:bestText});
+  });
+  const baseSemantic = count ? total/count : 0;
+  const resumeSet = new Set(resumeSkillsCanon);
+  let relatedHits=[], boost=0;
+  requiredCanon.forEach(req=>{
+    if(!resumeSet.has(req)){
+      const relatives = RELATED[req]||[];
+      const hit = relatives.find(r=>resumeSet.has(r));
+      if(hit){ relatedHits.push({required:req, foundRelated:hit}); boost += 0.06; }
+    }
+  });
+  boost = Math.min(boost, 0.24);
+  return {score:Math.min(1, baseSemantic+boost), perRequirementBest, relatedHits, baseSemantic, boost};
+}
+function keywordMatch(requiredCanon, preferredCanon, resumeSkillsCanon){
+  const resumeSet = new Set(resumeSkillsCanon);
+  const matchedRequired = requiredCanon.filter(s=>resumeSet.has(s));
+  const missingRequired = requiredCanon.filter(s=>!resumeSet.has(s));
+  const matchedPreferred = preferredCanon.filter(s=>resumeSet.has(s));
+  const missingPreferred = preferredCanon.filter(s=>!resumeSet.has(s));
+  const requiredScore = requiredCanon.length ? matchedRequired.length/requiredCanon.length : 1;
+  const preferredScore = preferredCanon.length ? matchedPreferred.length/preferredCanon.length : 1;
+  return {requiredScore, preferredScore, matchedRequired, missingRequired, matchedPreferred, missingPreferred};
+}
+function sectionRelevance(sectionText, requiredCanon){
+  if(!sectionText || !sectionText.trim()) return 0;
+  const skillsInSection = new Set(extractSkillsFromText(sectionText));
+  if(requiredCanon.length===0) return 1;
+  const hits = requiredCanon.filter(s=>skillsInSection.has(s) || (RELATED[s]||[]).some(r=>skillsInSection.has(r)));
+  return hits.length/requiredCanon.length;
+}
+function scoreCandidate(jd, resume, weights){
+  const requiredCanon = jd.requiredSkills.map(canon);
+  const preferredCanon = jd.preferredSkills.map(canon);
+  const resumeSkillsCanon = resume.skills.map(canon);
+  const kw = keywordMatch(requiredCanon, preferredCanon, resumeSkillsCanon);
+  const jdSentences = jd.requirementSentences.length ? jd.requirementSentences : splitSentences(jd.rawText);
+  const resumeSentences = splitSentences(resume.rawText);
+  const sem = semanticMatch(jdSentences, resumeSentences, requiredCanon, resumeSkillsCanon);
+  const expScore = sectionRelevance(resume.sections.experience, requiredCanon);
+  const projScore = sectionRelevance(resume.sections.projects, requiredCanon);
+  const requiredPct=kw.requiredScore*100, preferredPct=kw.preferredScore*100, semanticPct=sem.score*100, expPct=expScore*100, projPct=projScore*100;
+  const final = weights.required_skills_keyword*requiredPct + weights.semantic_similarity*semanticPct +
+                weights.preferred_skills_keyword*preferredPct + weights.experience_relevance*expPct + weights.project_relevance*projPct;
+  return {
+    id: resume.id, candidate: resume.name, parse_status: resume.parse_status,
+    final_score: Math.round(final*10)/10,
+    required_score: Math.round(requiredPct*10)/10,
+    preferred_score: Math.round(preferredPct*10)/10,
+    semantic_score: Math.round(semanticPct*10)/10,
+    experience_score: Math.round(expPct*10)/10,
+    project_score: Math.round(projPct*10)/10,
+    matched_required: kw.matchedRequired, missing_required: kw.missingRequired,
+    matched_preferred: kw.matchedPreferred, missing_preferred: kw.missingPreferred,
+    related_hits: sem.relatedHits,
+    top_semantic_evidence: sem.perRequirementBest.slice().sort((a,b)=>b.similarity-a.similarity).slice(0,3),
+    resume_ref: resume,
+  };
+}
+function rankCandidates(results){
+  return results.slice().sort((a,b)=>{
+    if(b.final_score !== a.final_score) return b.final_score - a.final_score;
+    if(b.required_score !== a.required_score) return b.required_score - a.required_score;
+    return a.candidate.localeCompare(b.candidate);
+  }).map((r,i)=>({...r, rank:i+1}));
+}
+ 
+/* =========================================================================
+   PARSERS
+   ========================================================================= */
+const SECTION_HEADERS = {
+  skills: ["skills","technical skills","core competencies","technologies","tech stack"],
+  experience: ["experience","work experience","internship","internships","professional experience","employment"],
+  projects: ["projects","project","academic projects","personal projects"],
+  education: ["education","academic background","academics"],
+  certifications: ["certifications","certificates","licenses"],
+};
+function matchHeader(line){
+  const norm = line.trim().toLowerCase().replace(/[:\-–]+$/,'').trim();
+  if(norm.length>40) return null;
+  for(const [key, variants] of Object.entries(SECTION_HEADERS)){
+    if(variants.includes(norm)) return key;
+  }
+  return null;
+}
+function splitIntoSections(text){
+  const lines = text.split(/\n/);
+  const sections = {skills:"", experience:"", projects:"", education:"", certifications:""};
+  let current = null;
+  lines.forEach(line=>{
+    const header = matchHeader(line);
+    if(header){ current = header; return; }
+    if(current) sections[current] += line + "\n";
+  });
+  return sections;
+}
+function guessName(text, fallback){
+  const lines = text.split(/\n/).map(l=>l.trim()).filter(Boolean);
+  for(const line of lines.slice(0,5)){
+    if(line.length>3 && line.length<45 && !/@/.test(line) && !/\d{3,}/.test(line) && !matchHeader(line)){
+      return line;
+    }
+  }
+  return fallback;
+}
+function parseResumeText(text, name){
+  const sections = splitIntoSections(text);
+  let skills = extractSkillsFromText(sections.skills || "");
+  if(skills.length===0) skills = extractSkillsFromText(text);
+  return { name: guessName(text, name), rawText: text, sections, skills };
+}
+function parseJDText(text){
+  const sections = splitIntoSections(text);
+  const lower = text.toLowerCase();
+  let requiredBlock = text, preferredBlock = "";
+  const prefMarkers = ["preferred qualifications","preferred skills","nice to have","good to have","bonus"];
+  for(const marker of prefMarkers){
+    const idx = lower.indexOf(marker);
+    if(idx !== -1){
+      preferredBlock = text.slice(idx);
+      requiredBlock = text.slice(0, idx);
+      break;
+    }
+  }
+  const requiredSkills = extractSkillsFromText(requiredBlock);
+  const preferredSkills = extractSkillsFromText(preferredBlock).filter(s=>!requiredSkills.includes(s));
+  const titleLine = text.split(/\n/).map(l=>l.trim()).find(l=>l.length>3 && l.length<70) || "Job description";
+  const requirementSentences = splitSentences(requiredBlock).filter(s=>s.length<220);
+  return {
+    title: titleLine, rawText: text,
+    requiredSkills: requiredSkills.length ? requiredSkills : extractSkillsFromText(text),
+    preferredSkills, requirementSentences,
+  };
+}
+function checkJDBias(jd){
+  const flags = [];
+  const lower = jd.rawText.toLowerCase();
+  const isJuniorRole = /junior|intern|entry.level|fresher/.test(lower);
+  const yearsMatch = lower.match(/(\d+)\+?\s*years?/);
+  if(isJuniorRole && yearsMatch && parseInt(yearsMatch[1]) >= 2){
+    flags.push(`Requires ${yearsMatch[1]}+ years of experience but the title suggests an entry-level/junior/intern role — this may unfairly exclude otherwise qualified early-career candidates.`);
+  }
+  if(jd.requiredSkills.length > 12){
+    flags.push(`${jd.requiredSkills.length} required skills detected — an unusually long required list can exclude candidates who are strong overall but miss one or two niche tools.`);
+  }
+  VAGUE_PHRASES.forEach(p=>{ if(lower.includes(p)) flags.push(`Contains the vague, hard-to-verify requirement "${p}" — consider replacing with a concrete, observable skill or behavior.`); });
+  BIASED_WORDS.forEach(w=>{ if(lower.includes(w)) flags.push(`Contains the phrase "${w}", which can read as exclusionary or age/culture-coded language.`); });
+  return flags;
+}
+ 
+/* =========================================================================
+   PDF / TEXT EXTRACTION
+   ========================================================================= */
+async function extractPdfText(file){
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({data: buf}).promise;
+  let text = "";
+  for(let i=1;i<=pdf.numPages;i++){
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(it=>it.str).join(" ") + "\n";
+  }
+  if(text.trim().length < 40 && window.Tesseract){
+    // likely scanned — fall back to OCR on rendered pages
+    try{
+      let ocrText = "";
+      for(let i=1;i<=Math.min(pdf.numPages,5);i++){
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({scale:2});
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width; canvas.height = viewport.height;
+        await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
+        const {data:{text:pageText}} = await Tesseract.recognize(canvas, 'eng');
+        ocrText += pageText + "\n";
+      }
+      if(ocrText.trim().length>0) return {text: ocrText, method:'ocr'};
+    }catch(e){ /* OCR unavailable (offline) — fall through with whatever text we have */ }
+  }
+  return {text, method: text.trim().length>=40 ? 'direct' : 'failed'};
+}
+ 
+/* =========================================================================
+   APP STATE + UI
+   ========================================================================= */
+const state = {
+  jd: null,
+  resumes: [], // {id, name, file, rawTextResult, parse_status}
+  results: [], // scored + ranked
+  weights: {required_skills_keyword:0.35, semantic_similarity:0.35, preferred_skills_keyword:0.10, experience_relevance:0.10, project_relevance:0.10},
+  compareSelection: new Set(),
+};
+ 
+// ---- tabs ----
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+function goTab(name){ document.querySelector(`nav.tabs button[data-tab="${name}"]`).click(); }
+ 
+// ---- JD upload/parse ----
+const jdDrop = document.getElementById('jd-drop');
+const jdFileInput = document.getElementById('jd-file');
+jdDrop.addEventListener('click', ()=>jdFileInput.click());
+jdDrop.addEventListener('dragover', e=>{e.preventDefault(); jdDrop.classList.add('drag');});
+jdDrop.addEventListener('dragleave', ()=>jdDrop.classList.remove('drag'));
+jdDrop.addEventListener('drop', e=>{
+  e.preventDefault(); jdDrop.classList.remove('drag');
+  if(e.dataTransfer.files.length) handleJdFile(e.dataTransfer.files[0]);
+});
+jdFileInput.addEventListener('change', e=>{ if(e.target.files.length) handleJdFile(e.target.files[0]); });
+async function handleJdFile(file){
+  document.getElementById('jd-drop-label').textContent = 'Reading ' + file.name + '...';
+  let text = "";
+  if(file.name.toLowerCase().endsWith('.pdf')){
+    const r = await extractPdfText(file); text = r.text;
+  } else {
+    text = await file.text();
+  }
+  document.getElementById('jd-paste').value = text;
+  document.getElementById('jd-drop-label').textContent = 'Loaded: ' + file.name + ' (click to replace)';
+}
+document.getElementById('jd-parse-btn').addEventListener('click', ()=>{
+  const text = document.getElementById('jd-paste').value.trim();
+  if(!text){ alert('Paste or upload a job description first.'); return; }
+  state.jd = parseJDText(text);
+  renderJdReview();
+  renderBiasReport();
+  updateAnalyzeButton();
+});
+function renderJdReview(){
+  document.getElementById('jd-review').style.display = 'block';
+  document.getElementById('jd-title').value = state.jd.title;
+  renderChips('required-chips', state.jd.requiredSkills, 'required');
+  renderChips('preferred-chips', state.jd.preferredSkills, 'preferred');
+}
+function renderChips(containerId, list, kind){
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  list.forEach((skill, idx)=>{
+    const chip = document.createElement('span');
+    chip.className = 'chip ' + (kind==='required' ? 'required' : '');
+    chip.innerHTML = `${skill} <button data-idx="${idx}">×</button>`;
+    chip.querySelector('button').addEventListener('click', ()=>{
+      list.splice(idx,1);
+      renderChips(containerId, list, kind);
+    });
+    el.appendChild(chip);
+  });
+}
+document.getElementById('required-add').addEventListener('keydown', e=>{
+  if(e.key==='Enter' && e.target.value.trim()){
+    state.jd.requiredSkills.push(canon(e.target.value.trim()));
+    e.target.value='';
+    renderChips('required-chips', state.jd.requiredSkills, 'required');
+  }
+});
+document.getElementById('preferred-add').addEventListener('keydown', e=>{
+  if(e.key==='Enter' && e.target.value.trim()){
+    state.jd.preferredSkills.push(canon(e.target.value.trim()));
+    e.target.value='';
+    renderChips('preferred-chips', state.jd.preferredSkills, 'preferred');
+  }
+});
+document.getElementById('jd-title').addEventListener('input', e=>{ if(state.jd) state.jd.title = e.target.value; });
+function renderBiasReport(){
+  const flags = checkJDBias(state.jd);
+  const el = document.getElementById('bias-report');
+  if(flags.length===0){ el.innerHTML = '<span class="muted">No obvious quality issues detected in this JD.</span>'; return; }
+  el.innerHTML = flags.map(f=>`<div class="flag">${f}</div>`).join('');
+}
+ 
+// ---- Resume upload ----
+const resumeDrop = document.getElementById('resume-drop');
+const resumeFilesInput = document.getElementById('resume-files');
+resumeDrop.addEventListener('click', ()=>resumeFilesInput.click());
+resumeDrop.addEventListener('dragover', e=>{e.preventDefault(); resumeDrop.classList.add('drag');});
+resumeDrop.addEventListener('dragleave', ()=>resumeDrop.classList.remove('drag'));
+resumeDrop.addEventListener('drop', e=>{
+  e.preventDefault(); resumeDrop.classList.remove('drag');
+  if(e.dataTransfer.files.length) handleResumeFiles([...e.dataTransfer.files]);
+});
+resumeFilesInput.addEventListener('change', e=>{ if(e.target.files.length) handleResumeFiles([...e.target.files]); });
+ 
+async function handleResumeFiles(files){
+  const progressEl = document.getElementById('resume-progress');
+  for(const file of files){
+    const id = 'r' + Math.random().toString(36).slice(2,9);
+    const row = document.createElement('div');
+    row.id = 'prog-'+id;
+    row.innerHTML = `<span class="pill warn">processing</span> ${file.name}`;
+    progressEl.appendChild(row);
+    try{
+      let text = "", method="direct";
+      if(file.name.toLowerCase().endsWith('.pdf')){
+        const r = await extractPdfText(file); text = r.text; method = r.method;
+      } else {
+        text = await file.text();
+      }
+      const status = method==='failed' ? 'failed' : (method==='ocr' ? 'partial' : 'ok');
+      const parsed = parseResumeText(text, file.name.replace(/\.(pdf|txt)$/i,''));
+      state.resumes.push({id, name: parsed.name, rawText: parsed.rawText, sections: parsed.sections, skills: parsed.skills, parse_status: status, source_file: file.name});
+      row.innerHTML = status==='ok'
+        ? `<span class="pill ok">✓ processed</span> ${file.name} — ${parsed.skills.length} skills detected`
+        : status==='partial'
+        ? `<span class="pill warn">⚠ OCR fallback</span> ${file.name} — ${parsed.skills.length} skills detected`
+        : `<span class="pill fail">✗ failed</span> ${file.name} — no extractable text`;
+    }catch(err){
+      row.innerHTML = `<span class="pill fail">✗ failed</span> ${file.name} — ${err.message}`;
+    }
+    updateAnalyzeButton();
+  }
+}
+function updateAnalyzeButton(){
+  const btn = document.getElementById('analyze-btn');
+  btn.disabled = !(state.jd && state.resumes.length>0);
+}
+ 
+// ---- Analyze ----
+document.getElementById('analyze-btn').addEventListener('click', runAnalysis);
+function runAnalysis(){
+  document.getElementById('analyze-status').textContent = 'Scoring ' + state.resumes.length + ' candidates...';
+  setTimeout(()=>{
+    const usable = state.resumes.filter(r=>r.parse_status !== 'failed');
+    const results = usable.map(r=>scoreCandidate(state.jd, r, state.weights));
+    state.results = rankCandidates(results);
+document.getElementById('analyze-status').textContent = 'Done — ' + state.results.length + ' candidates ranked.';
+
+renderRankings();
+renderResumeAnalysis();
+
+renderComparePicker();
+goTab('rankings');
+  }, 30);
+}
+ 
+// ---- Rankings ----
+function renderRankings(){
+  const results = state.results;
+  const summaryEl = document.getElementById('rankings-summary');
+  if(results.length===0){ summaryEl.innerHTML=''; document.getElementById('rankings-table-wrap').innerHTML='<div class="empty">Run an analysis to see rankings.</div>'; return; }
+  const avg = (results.reduce((s,r)=>s+r.final_score,0)/results.length).toFixed(1);
+  summaryEl.innerHTML = `
+    <div style="display:flex; gap:40px;">
+      <div><div class="muted" style="font-size:12px;">Total candidates</div><div class="score-badge">${results.length}</div></div>
+      <div><div class="muted" style="font-size:12px;">Average match</div><div class="score-badge">${avg}</div></div>
+      <div><div class="muted" style="font-size:12px;">Top candidate</div><div class="score-badge">${results[0].candidate}</div></div>
+    </div>`;
+  let rows = results.map(r=>`
+    <tr class="rowlink" data-id="${r.id}">
+      <td>#${r.rank}</td>
+      <td>${r.candidate}${r.parse_status==='partial' ? ' <span class="pill warn">OCR</span>' : ''}</td>
+      <td class="num">${r.final_score}</td>
+<td class="num required-column">${r.required_score}</td>%"></span></span></td>
+<td class="num semantic-column">${r.semantic_score}</td>      <td class="num">${r.experience_score}</td>
+      <td class="num">${r.missing_required.length}</td>
+    </tr>`).join('');
+  document.getElementById('rankings-table-wrap').innerHTML = `
+    <table>
+      <thead><tr><th>Rank</th><th>Candidate</th><th class="num">Score</th><th class="num">Required</th><th class="num">Semantic</th><th class="num">Experience</th><th class="num">Missing req.</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="margin-top:14px; display:flex; gap:10px;">
+      <button class="btn secondary small" id="export-csv">Export CSV</button>
+      <button class="btn secondary small" id="export-json">Export JSON</button>
+      <button class="btn secondary small" id="export-print">Print report</button>
+    </div>`;
+  document.querySelectorAll('#rankings-table-wrap tr.rowlink').forEach(tr=>{
+    tr.addEventListener('click', ()=>{ showDetail(tr.dataset.id); goTab('detail'); });
+  });
+  document.getElementById('export-csv').addEventListener('click', exportCsv);
+  document.getElementById('export-json').addEventListener('click', exportJson);
+  document.getElementById('export-print').addEventListener('click', ()=>window.print());
+}
+function renderResumeAnalysis() {
+
+  const results = state.results;
+
+  if (!results.length) return;
+
+  const rankingsWrap = document.getElementById('rankings-table-wrap');
+
+  // Remove previous chart if analysis is re-run
+  const oldAnalysis = rankingsWrap.querySelector('.resume-analysis');
+  if (oldAnalysis) oldAnalysis.remove();
+
+  const analysis = document.createElement('div');
+  analysis.className = 'resume-analysis';
+
+  analysis.innerHTML = `
+    <h3>Resume Analysis</h3>
+
+    <p class="hint">
+      Overall comparison of all candidates across the major ranking factors.
+    </p>
+
+    <div class="radar-wrapper">
+      <canvas id="resumeRadarChart"></canvas>
+    </div>
+  `;
+
+  rankingsWrap.appendChild(analysis);
+
+  const ctx = document
+    .getElementById('resumeRadarChart')
+    .getContext('2d');
+
+  new Chart(ctx, {
+    type: 'radar',
+
+    data: {
+      labels: [
+        'Required Skills',
+        'Semantic Match',
+        'Preferred Skills',
+        'Experience',
+        'Projects'
+      ],
+
+      datasets: results.map((r, index) => ({
+
+        label: `#${r.rank} ${r.candidate}`,
+
+        data: [
+          r.required_score,
+          r.semantic_score,
+          r.preferred_score,
+          r.experience_score,
+          r.project_score
+        ],
+
+        borderWidth: 3,
+
+        pointRadius: 5,
+
+        pointHoverRadius: 7,
+
+        fill: true,
+
+        backgroundColor: `hsla(${index * 55}, 80%, 60%, 0.15)`,
+
+        borderColor: `hsl(${index * 55}, 80%, 60%)`,
+
+        pointBackgroundColor: `hsl(${index * 55}, 80%, 60%)`
+
+      }))
+    },
+
+    options: {
+
+      responsive: true,
+
+      maintainAspectRatio: false,
+
+      scales: {
+        r: {
+
+          min: 0,
+          max: 100,
+
+          beginAtZero: true,
+
+          ticks: {
+            stepSize: 20,
+            color: '#aaa',
+            backdropColor: 'transparent'
+          },
+
+          grid: {
+            color: 'rgba(255,255,255,0.15)'
+          },
+
+          angleLines: {
+            color: 'rgba(255,255,255,0.18)'
+          },
+
+          pointLabels: {
+            color: '#ffffff',
+            font: {
+              size: 14,
+              weight: '600'
+            }
+          }
+        }
+      },
+
+      plugins: {
+
+        legend: {
+          position: 'bottom',
+
+          labels: {
+            color: '#ffffff',
+            padding: 18,
+            usePointStyle: true
+          }
+        },
+
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.raw}%`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+ 
+// ---- Detail ----
+function showDetail(id){
+  const r = state.results.find(x=>x.id===id);
+  if(!r) return;
+  document.getElementById('detail-content').innerHTML = renderDetailHtml(r);
+}
+function renderDetailHtml(r){
+
+  const explanation = buildExplanation(r);
+
+  // Calculate how much each factor contributed to the final score
+  const contributions = {
+    required: r.required_score * state.weights.required_skills_keyword,
+    semantic: r.semantic_score * state.weights.semantic_similarity,
+    preferred: r.preferred_score * state.weights.preferred_skills_keyword,
+    experience: r.experience_score * state.weights.experience_relevance,
+    projects: r.project_score * state.weights.project_relevance
+  };
+
+  // Find the candidate immediately above this candidate
+  const candidateAbove = state.results.find(x => x.rank === r.rank - 1);
+
+  let comparisonHTML = "";
+
+  if(r.rank === 1){
+    comparisonHTML = `
+      <div class="rank-explanation">
+        <div class="rank-explanation-title">
+          🏆 Why is this candidate ranked #1?
+        </div>
+
+        <p>
+          <b>${r.candidate}</b> achieved the highest overall score in this batch.
+          The ranking is based on required skills, semantic similarity,
+          preferred skills, experience relevance, and project relevance.
+        </p>
+
+        <p>
+          Their strongest factors were
+          <b>${r.required_score}% required-skill coverage</b>
+          and
+          <b>${r.semantic_score}% semantic alignment</b>
+          with the job description.
+        </p>
+      </div>
+    `;
+  }
+  else if(candidateAbove){
+
+    const differences = [];
+
+    if(r.required_score < candidateAbove.required_score){
+      differences.push(
+        `required-skill coverage (${r.required_score}% vs ${candidateAbove.required_score}%)`
+      );
+    }
+
+    if(r.semantic_score < candidateAbove.semantic_score){
+      differences.push(
+        `semantic alignment (${r.semantic_score}% vs ${candidateAbove.semantic_score}%)`
+      );
+    }
+
+    if(r.experience_score < candidateAbove.experience_score){
+      differences.push(
+        `experience relevance (${r.experience_score}% vs ${candidateAbove.experience_score}%)`
+      );
+    }
+
+    if(r.project_score < candidateAbove.project_score){
+      differences.push(
+        `project relevance (${r.project_score}% vs ${candidateAbove.project_score}%)`
+      );
+    }
+
+    comparisonHTML = `
+      <div class="rank-explanation">
+        <div class="rank-explanation-title">
+          📊 Why is this candidate ranked #${r.rank}?
+        </div>
+
+        <p>
+          <b>${candidateAbove.candidate}</b> is ranked immediately above
+          this candidate with a score of
+          <b>${candidateAbove.final_score}</b>,
+          compared with <b>${r.final_score}</b>.
+        </p>
+
+        ${
+          differences.length
+          ? `<p>
+              The main differences are:
+              <b>${differences.join(', ')}</b>.
+             </p>`
+          : `<p>
+              The difference comes from the combined weighted score
+              across the ranking factors.
+             </p>`
+        }
+      </div>
+    `;
+  }
+
+  return `
+
+    <!-- CANDIDATE HEADER -->
+    <div class="candidate-header">
+
+      <div>
+        <div class="candidate-rank">RANK #${r.rank}</div>
+
+        <h2 class="section">
+          ${r.candidate}
+        </h2>
+
+        <p class="muted">
+          ${r.resume_ref ? r.resume_ref.source_file || '' : ''}
+        </p>
+      </div>
+
+      <div class="candidate-score">
+        <span>${r.final_score}</span>
+        <small>Overall Match</small>
+      </div>
+
+    </div>
+
+
+    <!-- WHY THIS RANK -->
+    ${comparisonHTML}
+
+
+    <!-- SCORE BREAKDOWN -->
+    <div class="detail-section">
+
+      <h3 class="detail-heading">
+        Score breakdown
+      </h3>
+
+      <p class="hint">
+        The final score is calculated using the weighted factors below.
+      </p>
+
+
+      <div class="score-grid">
+
+        <div class="score-factor">
+          <div class="factor-top">
+            <span>Required skills</span>
+            <b>${r.required_score}%</b>
+          </div>
+
+          <div class="factor-bar">
+            <div style="width:${r.required_score}%"></div>
+          </div>
+
+          <small>
+            Weight: ${(state.weights.required_skills_keyword * 100).toFixed(0)}%
+            · Contribution: ${contributions.required.toFixed(1)}
+          </small>
+        </div>
+
+
+        <div class="score-factor">
+          <div class="factor-top">
+            <span>Semantic similarity</span>
+            <b>${r.semantic_score}%</b>
+          </div>
+
+          <div class="factor-bar">
+            <div style="width:${r.semantic_score}%"></div>
+          </div>
+
+          <small>
+            Weight: ${(state.weights.semantic_similarity * 100).toFixed(0)}%
+            · Contribution: ${contributions.semantic.toFixed(1)}
+          </small>
+        </div>
+
+
+        <div class="score-factor">
+          <div class="factor-top">
+            <span>Preferred skills</span>
+            <b>${r.preferred_score}%</b>
+          </div>
+
+          <div class="factor-bar">
+            <div style="width:${r.preferred_score}%"></div>
+          </div>
+
+          <small>
+            Weight: ${(state.weights.preferred_skills_keyword * 100).toFixed(0)}%
+            · Contribution: ${contributions.preferred.toFixed(1)}
+          </small>
+        </div>
+
+
+        <div class="score-factor">
+          <div class="factor-top">
+            <span>Experience relevance</span>
+            <b>${r.experience_score}%</b>
+          </div>
+
+          <div class="factor-bar">
+            <div style="width:${r.experience_score}%"></div>
+          </div>
+
+          <small>
+            Weight: ${(state.weights.experience_relevance * 100).toFixed(0)}%
+            · Contribution: ${contributions.experience.toFixed(1)}
+          </small>
+        </div>
+
+
+        <div class="score-factor">
+          <div class="factor-top">
+            <span>Project relevance</span>
+            <b>${r.project_score}%</b>
+          </div>
+
+          <div class="factor-bar">
+            <div style="width:${r.project_score}%"></div>
+          </div>
+
+          <small>
+            Weight: ${(state.weights.project_relevance * 100).toFixed(0)}%
+            · Contribution: ${contributions.projects.toFixed(1)}
+          </small>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- REQUIRED SKILLS -->
+    <div class="detail-section">
+
+      <h3 class="detail-heading">
+        Required skills
+      </h3>
+
+      <div class="chips">
+
+        ${
+          r.matched_required.map(s =>
+            `<span class="chip required">✓ ${s}</span>`
+          ).join('')
+          ||
+          '<span class="muted">None matched</span>'
+        }
+
+      </div>
+
+    </div>
+
+
+    <!-- MISSING SKILLS -->
+    <div class="detail-section">
+
+      <h3 class="detail-heading">
+        Missing required skills
+      </h3>
+
+      <div class="chips">
+
+        ${
+          r.missing_required.map(s =>
+            `<span class="chip">✗ ${s}</span>`
+          ).join('')
+          ||
+          '<span class="muted">✓ No required skills missing</span>'
+        }
+
+      </div>
+
+    </div>
+
+
+    <!-- RELATED SKILLS -->
+    ${
+      r.related_hits.length
+      ?
+      `
+      <div class="detail-section">
+
+        <h3 class="detail-heading">
+          Related-skill credit
+        </h3>
+
+        ${
+          r.related_hits.map(h => `
+            <div class="evidence">
+
+              <div class="label">
+                Related technology detected
+              </div>
+
+              Required <b>${h.required}</b> was not found literally,
+              but the resume contains <b>${h.foundRelated}</b>,
+              which is considered directly related.
+
+            </div>
+          `).join('')
+        }
+
+      </div>
+      `
+      :
+      ''
+    }
+
+
+    <!-- SEMANTIC EVIDENCE -->
+    <div class="detail-section">
+
+      <h3 class="detail-heading">
+        Semantic evidence
+      </h3>
+
+      <p class="hint">
+        These are the strongest contextual matches between the job
+        requirements and statements found in the resume.
+      </p>
+
+      ${
+        r.top_semantic_evidence.map(e => `
+
+          <div class="evidence">
+
+            <div class="label">
+              JD requirement · Similarity ${(e.similarity * 100).toFixed(0)}%
+            </div>
+
+            <b>
+              ${e.requirement}
+            </b>
+
+            <br><br>
+
+            ${
+              e.evidence
+              ? `Resume evidence: "${e.evidence}"`
+              : 'No close match found in resume.'
+            }
+
+          </div>
+
+        `).join('')
+      }
+
+    </div>
+
+
+    <!-- FINAL EXPLANATION -->
+    <div class="detail-section">
+
+      <h3 class="detail-heading">
+        Explanation
+      </h3>
+
+      <div class="explanation-box">
+        ${explanation}
+      </div>
+
+    </div>
+
+  `;
+}
+function buildExplanation(r){
+  const parts = [];
+  if(r.rank<=3){
+    parts.push(`Ranked #${r.rank} of ${state.results.length}.`);
+  }
+  if(r.required_score>=80) parts.push(`Covers ${r.required_score}% of required skills.`);
+  else if(r.required_score>0) parts.push(`Covers only ${r.required_score}% of required skills — missing ${r.missing_required.join(', ')}.`);
+  else parts.push(`Matches none of the explicitly required skills.`);
+  if(r.semantic_score>=60) parts.push(`Strong contextual/semantic alignment (${r.semantic_score}%) with the JD's responsibilities, even where exact terminology differs.`);
+  else if(r.semantic_score>=30) parts.push(`Moderate semantic alignment (${r.semantic_score}%) with the JD.`);
+  else parts.push(`Low semantic overlap (${r.semantic_score}%) with the JD's responsibilities.`);
+  if(r.related_hits.length) parts.push(`Received partial credit for ${r.related_hits.length} related-but-not-exact skill(s).`);
+  return parts.join(' ');
+}
+ 
+// ---- Compare ----
+function renderComparePicker(){
+  const el = document.getElementById('compare-picker');
+  el.innerHTML = state.results.map(r=>`
+    <label class="checkbox-row"><input type="checkbox" value="${r.id}"> #${r.rank} ${r.candidate} — ${r.final_score}</label>
+  `).join('');
+}
+document.getElementById('compare-run-btn').addEventListener('click', ()=>{
+  const ids = [...document.querySelectorAll('#compare-picker input:checked')].map(i=>i.value);
+  if(ids.length<2){ alert('Select at least two candidates.'); return; }
+  const cands = ids.map(id=>state.results.find(r=>r.id===id));
+  renderCompare(cands);
+});
+function renderCompare(cands){
+  const rows = [
+    ['Rank', c=>'#'+c.rank],
+    ['Final score', c=>c.final_score],
+    ['Required skills', c=>c.required_score+'%'],
+    ['Preferred skills', c=>c.preferred_score+'%'],
+    ['Semantic match', c=>c.semantic_score+'%'],
+    ['Experience', c=>c.experience_score+'%'],
+    ['Projects', c=>c.project_score+'%'],
+    ['Missing required', c=>c.missing_required.join(', ')||'None'],
+  ];
+  let html = '<table class="compare-table"><thead><tr><th></th>' + cands.map(c=>`<th>${c.candidate}</th>`).join('') + '</tr></thead><tbody>';
+  rows.forEach(([label, fn])=>{
+    html += `<tr><td>${label}</td>` + cands.map(c=>`<td>${fn(c)}</td>`).join('') + '</tr>';
+  });
+  html += '</tbody></table>';
+  const sorted = cands.slice().sort((a,b)=>b.final_score-a.final_score);
+  const top = sorted[0], next = sorted[1];
+  if(next){
+    const diffParts = [];
+    if(top.required_score !== next.required_score) diffParts.push(`required-skill coverage (${top.required_score}% vs ${next.required_score}%)`);
+    if(top.semantic_score !== next.semantic_score) diffParts.push(`semantic alignment (${top.semantic_score}% vs ${next.semantic_score}%)`);
+    html += `<p style="margin-top:14px;"><b>${top.candidate}</b> ranks above <b>${next.candidate}</b> mainly due to ${diffParts.join(' and ')}.</p>`;
+  }
+  document.getElementById('compare-result').innerHTML = html;
+}
+ 
+/* =========================================================================
+   CHAT ENGINE (rule-based; answers only from state.results)
+   ========================================================================= */
+function chatAppend(text, who){
+  const log = document.getElementById('chat-log');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + who;
+  div.innerHTML = `<span class="bubble">${text}</span>`;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+function findCandidate(query){
+  query = query.toLowerCase();
+  const rankMatch = query.match(/(?:rank|candidate|#)\s*(\d+)/);
+  if(rankMatch){
+    const r = state.results.find(x=>x.rank===parseInt(rankMatch[1]));
+    if(r) return r;
+  }
+  return state.results.find(r=>query.includes(r.candidate.toLowerCase()));
+}
+function answerChat(q){
+  if(state.results.length===0) return "Run an analysis first — I answer from the ranked results, not general knowledge.";
+  const lower = q.toLowerCase();
+ 
+  let m = lower.match(/why.*(?:is|does)?\s*(?:candidate\s*)?.*(?:above|over|higher than|beat)\s*.*/);
+  if(m){
+    const names = state.results.filter(r=>lower.includes(r.candidate.toLowerCase()) || lower.includes('#'+r.rank) || lower.includes('rank '+r.rank));
+    if(names.length>=2){
+      const [a,b] = names.sort((x,y)=>x.rank-y.rank);
+      const diffs = [];
+      if(a.required_score!==b.required_score) diffs.push(`required-skill coverage (${a.required_score}% vs ${b.required_score}%)`);
+      if(a.semantic_score!==b.semantic_score) diffs.push(`semantic match (${a.semantic_score}% vs ${b.semantic_score}%)`);
+      return `${a.candidate} (#${a.rank}, ${a.final_score}) ranks above ${b.candidate} (#${b.rank}, ${b.final_score}) mainly because of ${diffs.join(' and ') || 'a higher overall weighted score'}.`;
+    }
+  }
+ 
+  m = lower.match(/who (?:has|have|with)\s+(.+)/);
+  if(m){
+    const skill = canon(m[1].replace(/[?.]/g,'').trim());
+    const matches = state.results.filter(r=>r.resume_ref.skills.map(canon).includes(skill));
+    if(matches.length===0) return `No candidates in this batch have "${skill}" detected.`;
+    return `Candidates with "${skill}": ` + matches.map(r=>`${r.candidate} (#${r.rank})`).join(', ');
+  }
+ 
+  if(/most common(ly)? missing|common(est)? gap/.test(lower)){
+    const counts = new Map();
+    state.results.forEach(r=>r.missing_required.forEach(s=>counts.set(s,(counts.get(s)||0)+1)));
+    if(counts.size===0) return "No missing required skills across this batch — every candidate covers all required skills.";
+    const sorted = [...counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5);
+    return "Most commonly missing required skills: " + sorted.map(([s,c])=>`${s} (${c} candidates)`).join(', ');
+  }
+ 
+  m = lower.match(/why.*(?:didn.?t|did not|isn.?t in).*top ?3|top three/);
+  if(m){
+    const cand = findCandidate(lower);
+    if(cand){
+      if(cand.rank<=3) return `${cand.candidate} is actually in the top 3 (#${cand.rank}).`;
+      const third = state.results.find(r=>r.rank===3);
+      return `${cand.candidate} ranked #${cand.rank} (${cand.final_score}), below the #3 cutoff of ${third.candidate} (${third.final_score}) — mainly due to lower required-skill coverage (${cand.required_score}% vs ${third.required_score}%) and/or semantic match (${cand.semantic_score}% vs ${third.semantic_score}%).`;
+    }
+  }
+ 
+  const cand = findCandidate(lower);
+  if(cand) return buildExplanation(cand) + ` Missing required: ${cand.missing_required.join(', ')||'none'}.`;
+ 
+  return "I can answer things like: \"who has react\", \"why is candidate 1 above candidate 3\", \"what skills are most commonly missing\", or \"why didn't <name> make top 3\".";
+}
+document.getElementById('chat-send').addEventListener('click', sendChat);
+document.getElementById('chat-input').addEventListener('keydown', e=>{ if(e.key==='Enter') sendChat(); });
+function sendChat(){
+  const input = document.getElementById('chat-input');
+  const q = input.value.trim();
+  if(!q) return;
+  chatAppend(q, 'user');
+  input.value = '';
+  setTimeout(()=>chatAppend(answerChat(q).replace(/</g,'&lt;'), 'bot'), 150);
+}
+ 
+/* =========================================================================
+   EXPORT
+   ========================================================================= */
+function downloadBlob(content, filename, type){
+  const blob = new Blob([content], {type});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+}
+function exportCsv(){
+  const headers = ['rank','candidate','final_score','required_score','preferred_score','semantic_score','experience_score','project_score','matched_required','missing_required'];
+  const rows = state.results.map(r=>[r.rank,r.candidate,r.final_score,r.required_score,r.preferred_score,r.semantic_score,r.experience_score,r.project_score,r.matched_required.join('|'),r.missing_required.join('|')]);
+  const csv = [headers.join(','), ...rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))].join('\n');
+  downloadBlob(csv, 'sift_rankings.csv', 'text/csv');
+}
+function exportJson(){
+  const data = state.results.map(({resume_ref, ...rest})=>rest);
+  downloadBlob(JSON.stringify(data, null, 2), 'sift_rankings.json', 'application/json');
+}
+ 
+/* =========================================================================
+   WEIGHTS UI
+   ========================================================================= */
+const WEIGHT_LABELS = {
+  required_skills_keyword: 'Required skills (keyword)',
+  semantic_similarity: 'Semantic similarity',
+  preferred_skills_keyword: 'Preferred skills (keyword)',
+  experience_relevance: 'Experience relevance',
+  project_relevance: 'Project relevance',
+};
+const DEFAULT_WEIGHTS = {...state.weights};
+function renderWeightsUI(){
+  const el = document.getElementById('weights-controls');
+  el.innerHTML = '';
+  Object.keys(state.weights).forEach(key=>{
+    const row = document.createElement('div'); row.className = 'weights-row';
+    row.innerHTML = `<div>${WEIGHT_LABELS[key]}</div><input type="range" min="0" max="100" value="${Math.round(state.weights[key]*100)}" data-key="${key}"><div class="num" id="wval-${key}">${Math.round(state.weights[key]*100)}%</div>`;
+    el.appendChild(row);
+  });
+  el.querySelectorAll('input[type=range]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      state.weights[inp.dataset.key] = parseInt(inp.value)/100;
+      normalizeWeights(inp.dataset.key);
+      renderWeightsUI();
+      if(state.results.length) runAnalysis();
+    });
+  });
+}
+function normalizeWeights(changedKey){
+  const keys = Object.keys(state.weights);
+  const total = keys.reduce((s,k)=>s+state.weights[k],0);
+  if(total===0) return;
+  keys.forEach(k=>{ state.weights[k] = state.weights[k]/total; });
+}
+document.getElementById('weights-reset').addEventListener('click', ()=>{
+  state.weights = {...DEFAULT_WEIGHTS};
+  renderWeightsUI();
+  if(state.results.length) runAnalysis();
+});
+renderWeightsUI();
+ 
+
+document.getElementById('load-demo-btn').addEventListener('click', ()=>{
+  document.getElementById('jd-paste').value = SAMPLE_JD;
+  state.jd = parseJDText(SAMPLE_JD);
+  renderJdReview();
+  renderBiasReport();
+  state.resumes = SAMPLE_RESUMES.map(sr=>{
+    const parsed = parseResumeText(sr.text, sr.name.replace('.txt',''));
+    return {id:'r'+Math.random().toString(36).slice(2,9), name:parsed.name, rawText:parsed.rawText, sections:parsed.sections, skills:parsed.skills, parse_status:'ok', source_file: sr.name + ' (sample data)'};
+  });
+  const progressEl = document.getElementById('resume-progress');
+  progressEl.innerHTML = state.resumes.map(r=>`<div><span class="pill ok">✓ processed</span> ${r.source_file} — ${r.skills.length} skills detected</div>`).join('');
+  updateAnalyzeButton();
+});
+/* =========================================================
+   AUTHENTICATION FRONTEND
+   ========================================================= */
+
+// Switch between Login / Signup / Forgot Password
+function showAuthForm(formId) {
+
+  document.querySelectorAll('.auth-form').forEach(form => {
+    form.classList.remove('active');
+  });
+
+  const selectedForm = document.getElementById(formId);
+
+  if (selectedForm) {
+    selectedForm.classList.add('active');
+  }
+}
+
+
+// Show / hide password
+function togglePassword(inputId, button) {
+
+  const input = document.getElementById(inputId);
+
+  if (input.type === "password") {
+    input.type = "text";
+    button.textContent = "Hide";
+  } else {
+    input.type = "password";
+    button.textContent = "Show";
+  }
+}
+
+
+// Temporary frontend login
+function frontendLogin() {
+
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  if (!email || !password) {
+    alert("Please enter your email and password.");
+    return;
+  }
+
+  if (!email.includes("@")) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  alert("Login successful! Database authentication will be connected later.");
+
+  // Temporarily hide authentication screen
+  document.getElementById('auth-screen').style.display = 'none';
+}
+
+
+// Temporary frontend signup
+function frontendSignup() {
+
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const confirm = document.getElementById('signup-confirm').value;
+  const terms = document.getElementById('signup-terms').checked;
+
+  if (!name || !email || !password || !confirm) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  if (!email.includes("@")) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  if (password.length < 8) {
+    alert("Password must contain at least 8 characters.");
+    return;
+  }
+
+  if (password !== confirm) {
+    alert("Passwords do not match.");
+    return;
+  }
+
+  if (!terms) {
+    alert("Please accept the terms and privacy policy.");
+    return;
+  }
+
+  alert("Account created! Database connection will be added later.");
+
+  showAuthForm('login-form');
+
+  document.getElementById('login-email').value = email;
+}
+
+
+// Temporary forgot-password function
+function frontendForgotPassword() {
+
+  const email = document.getElementById('forgot-email').value.trim();
+
+  if (!email) {
+    alert("Please enter your email address.");
+    return;
+  }
+
+  if (!email.includes("@")) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  alert(
+    "If an account exists with this email, password reset instructions will be sent."
+  );
+}
+</script>
+</body>
+</html>
+ 
+
+
+
